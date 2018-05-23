@@ -20,21 +20,12 @@ class App extends React.Component {
         this.state = {
             channel: '',
             username: '',
-            playerId: 123,
+            playerId: null,
             isInvite: false,
-            playerIsReady: true,
-            gameIsOpen: true,
-            playerHasJoined: true,
-            players: [
-                {
-                    userId: 123,
-                    username: 'Alf',
-                },
-                {
-                    userId: 321,
-                    username: '_ioi_',
-                },
-            ],
+            playerIsReady: false,
+            gameIsOpen: false,
+            playerHasJoined: false,
+            players: [],
             cardsOpponent: [],
             cards: [],
             passRound: false,
@@ -66,7 +57,6 @@ class App extends React.Component {
                 channel: this.getChannelFromUrlHash(urlHash),
             });
         }
-        this.getCards();
     }
 
     componentDidUpdate() {
