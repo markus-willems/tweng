@@ -11,7 +11,8 @@
         "build:prod": "yarn run build --mode=production",
         "build:dev": "yarn run build --mode=development",
         "devServer:prod": "webpack-dev-server --mode=production",
-        "devServer:dev": "webpack-dev-server --mode=development"
+        "devServer:dev": "webpack-dev-server --mode=development",
+        "deploy": "surge --domain http://chemical-dock.surge.sh -p ./build"
     },
     "devDependencies": {
         "babel-core": "^6.26.3",

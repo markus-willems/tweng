@@ -1,6 +1,8 @@
 import React from 'react';
 import ClipboardJS from 'clipboard';
 
+import Errors from './Errors';
+
 export default class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -79,37 +81,30 @@ export default class Login extends React.Component {
         );
     }
 
+    renderErrors(errors) {
+        return <Errors errors={errors} />;
+    }
+
     render() {
         const {
             playerHasJoined,
             isInvite,
             inviteLink,
             playerIsReady,
+            errors,
         } = this.props;
 
         return (
             <React.Fragment>
-                {/* !playerIsReady ? (
-                    <div className="login">
-                        <h2>{isInvite ? 'Join' : 'Create'}</h2>
-                        {inviteLink ? (
-                            <React.Fragment>
-                                {this.renderInvite()}
-                                {this.renderReady()}
-                                {this.state.linkCopied ? 'Link copied!' : ''}
-                            </React.Fragment>
-                        ) : (
-                            this.renderForm()
-                        )}
-                    </div>
-                ) : null */}
                 {!playerIsReady ? (
                     <div className="login">
+                        <h1 className="logo">Tweng!</h1>
                         <h2>{isInvite ? 'Join' : 'Create'}</h2>
                         {inviteLink ? this.renderInvite() : null}
                         {playerHasJoined ? this.renderReady() : null}
                         {!playerHasJoined ? this.renderForm() : null}
                         {this.state.linkCopied ? 'Link copied!' : ''}
+                        {this.renderErrors(errors)}
                     </div>
                 ) : null}
             </React.Fragment>

@@ -6,7 +6,7 @@ const CardMenu = ({ cardId, menuIsOpen, handleCardOnClick }) => {
             style={{ display: menuIsOpen ? 'block' : 'none' }}
             className="card-menu"
         >
-            <button onClick={() => handleCardOnClick(cardId)}>Play</button>
+            <span onClick={() => handleCardOnClick(cardId)}>▲</span>
         </div>
     );
 };

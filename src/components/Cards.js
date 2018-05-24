@@ -48,7 +48,16 @@ const spellActive = (spells, type) => {
     );
 };
 
-export default ({ cards, cardsOpponent, spells, isMobile }) => {
+export default ({
+    cards,
+    cardsOpponent,
+    spells,
+    isMobile,
+    playersTurn,
+    opponentPassRound,
+}) => {
+    const isTurn = isMobile && playersTurn;
+    const hasPassed = isMobile && opponentPassRound;
     return (
         <div className="cards">
             <div className="cards-opponent">
@@ -56,7 +65,11 @@ export default ({ cards, cardsOpponent, spells, isMobile }) => {
                     {spellActive(spells, 'longrange') ? (
                         <div className="spell-active" />
                     ) : null}
-                    <div className="row-strength">
+                    <div
+                        className={
+                            'row-strength' + (hasPassed ? ' passed' : '')
+                        }
+                    >
                         {rowStength(cardsOpponent, spells, 'longrange')}
                     </div>
                     {rowCards(cardsOpponent, spells, 'longrange')}
@@ -65,7 +78,11 @@ export default ({ cards, cardsOpponent, spells, isMobile }) => {
                     {spellActive(spells, 'midrange') ? (
                         <div className="spell-active" />
                     ) : null}
-                    <div className="row-strength">
+                    <div
+                        className={
+                            'row-strength' + (hasPassed ? ' passed' : '')
+                        }
+                    >
                         {rowStength(cardsOpponent, spells, 'midrange')}
                     </div>
                     {rowCards(cardsOpponent, spells, 'midrange')}
@@ -74,7 +91,11 @@ export default ({ cards, cardsOpponent, spells, isMobile }) => {
                     {spellActive(spells, 'frontline') ? (
                         <div className="spell-active" />
                     ) : null}
-                    <div className="row-strength">
+                    <div
+                        className={
+                            'row-strength' + (hasPassed ? ' passed' : '')
+                        }
+                    >
                         {rowStength(cardsOpponent, spells, 'frontline')}
                     </div>
                     {rowCards(cardsOpponent, spells, 'frontline')}
@@ -85,7 +106,7 @@ export default ({ cards, cardsOpponent, spells, isMobile }) => {
                     {spellActive(spells, 'frontline') ? (
                         <div className="spell-active" />
                     ) : null}
-                    <div className="row-strength">
+                    <div className={'row-strength' + (isTurn ? ' turn' : '')}>
                         {rowStength(cards, spells, 'frontline')}
                     </div>
                     {rowCards(cards, spells, 'frontline')}
@@ -94,7 +115,7 @@ export default ({ cards, cardsOpponent, spells, isMobile }) => {
                     {spellActive(spells, 'midrange') ? (
                         <div className="spell-active" />
                     ) : null}
-                    <div className="row-strength">
+                    <div className={'row-strength' + (isTurn ? ' turn' : '')}>
                         {rowStength(cards, spells, 'midrange')}
                     </div>
                     {rowCards(cards, spells, 'midrange')}
@@ -103,7 +124,7 @@ export default ({ cards, cardsOpponent, spells, isMobile }) => {
                     {spellActive(spells, 'longrange') ? (
                         <div className="spell-active" />
                     ) : null}
-                    <div className="row-strength">
+                    <div className={'row-strength' + (isTurn ? ' turn' : '')}>
                         {rowStength(cards, spells, 'longrange')}
                     </div>
                     {rowCards(cards, spells, 'longrange')}

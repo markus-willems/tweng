@@ -79,12 +79,13 @@ export default ({
     opponentPassRound,
     playersTurn,
     isMobile,
+    menuIsOpen,
 }) => {
     const opponent = players.filter(player => player.userId !== playerId).pop();
     const player = players.filter(player => player.userId === playerId).pop();
 
     return (
-        <div className="players">
+        <div className={'players' + (isMobile && menuIsOpen ? ' open' : '')}>
             <Player
                 player={opponent}
                 type="opponent"

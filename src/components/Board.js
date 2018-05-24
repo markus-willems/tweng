@@ -11,6 +11,7 @@ export default ({
     setTotalStrength,
     handleCardOnClick,
     isMobile,
+    opponentPassRound,
 }) => {
     return (
         <div className="board">
@@ -19,6 +20,8 @@ export default ({
                 spells={spells}
                 cards={cards}
                 cardsOpponent={cardsOpponent}
+                opponentPassRound={opponentPassRound}
+                playersTurn={playersTurn}
             />
             <Hand
                 isMobile={isMobile}

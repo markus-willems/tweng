@@ -11,6 +11,7 @@ class CardsSlider extends React.Component {
         };
 
         this.handleOnClickButton = this.handleOnClickButton.bind(this);
+        this.handleCardOnClick = this.handleCardOnClick.bind(this);
     }
 
     handleOnClickButton(type) {
@@ -28,6 +29,12 @@ class CardsSlider extends React.Component {
         }
         this.setState({
             currentIndex: newIndex,
+        });
+    }
+
+    handleCardOnClick() {
+        this.setState({
+            currentIndex: 0,
         });
     }
 
@@ -59,6 +66,7 @@ class CardsSlider extends React.Component {
                     )
                     .map(card => (
                         <Card
+                            onClick={this.handleCardOnClick}
                             key={card.id}
                             playersTurn={playersTurn}
                             handleCardOnClick={handleCardOnClick}
@@ -116,7 +124,8 @@ export default class Cards extends React.Component {
                         'hand' + (this.state.showHandOnMobile ? ' open' : '')
                     }
                 >
-                    {!isMobile ? (
+                    {!isMobile ||
+                    cards.filter(card => !card.played).length === 0 ? (
                         cards
                             .filter(card => !card.played)
                             .map(card => (

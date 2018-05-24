@@ -23,7 +23,7 @@ img {
     left: 0;
     justify-content: center;
     align-items: center;
-    z-index: 3;
+    z-index: 99999;
 }
 
 .overlay-message {
@@ -39,6 +39,12 @@ img {
     position: relative;
     display: flex;
     height: 100vh;
+}
+
+.logo {
+    font-size: 3em;
+    margin: 0;
+    font-weight: normal;
 }
 
 .container.is-login {
@@ -64,8 +70,17 @@ img {
 }
 
 .actions {
-    flex: 1 1 20%;
-    text-align: center;
+    flex: 1 1 7%;
+    display: flex;
+    justify-content: center;
+}
+
+.actions button {
+    flex: 1 1 100%;
+    max-width: 25%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
 }
 
 .actions-disable {
@@ -74,26 +89,29 @@ img {
 }
 
 .player {
-    flex: 1 1 40%;
+    flex: 1 1 46.5%;
 }
 
 .player-info {
     padding: 0;
     display: flex;
-    flex-wrap: wrap;
+    flex: 1 1 100%;
+    flex-direction: column;
 }
 
 .player-info .avatar {
-    flex: 1 1 100%;
-    text-align: center;
+    flex: 1 1 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .player-info .avatar img {
-    max-width: 100px;
+    max-width: 30%;
 }
 
 .player-info .name {
-    flex: 1 1 100%;
+    flex: 1 1 25%;
     text-align: center;
     font-size: 20px;
     font-weight: 600;
@@ -102,14 +120,16 @@ img {
     color: #333;
     border: solid #fff;
     border-width: 2px 0;
+    display: flex;
+    justify-content: center;
+    align-content: center;
     padding: 5px 0;
+    margin: 10px 0;
 }
 
 .player-info .lifes {
-    flex: 1 1 100%;
+    flex: 1 1 20%;
     display: flex;
-    height: 50px;
-    margin: 10px 0;
 }
 
 .lifes .life {
@@ -122,15 +142,14 @@ img {
 }
 
 .lifes .life img {
-    max-width: 50%;
+    max-width: 25%;
 }
 
 .player-info .total-strength {
-    flex: 1 1 100%;
+    flex: 1 1 25%;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 5px 0;
 }
 
 .total-strength span {
@@ -155,6 +174,7 @@ img {
     border: solid #fff;
     border-width: 2px 0;
     background: orange;
+    margin-top: 10px;
 }
 
 .player-info .turn {
@@ -165,6 +185,7 @@ img {
     border: solid #fff;
     border-width: 2px 0;
     background: green;
+    margin-top: 10px;
 }
 
 .board {
@@ -272,6 +293,7 @@ img {
     overflow: hidden;
     display: flex;
     flex: 0 1 8%;
+    max-height: 100%;
 }
 
 .card-menu {
@@ -281,6 +303,16 @@ img {
     left: 0;
     bottom: 0;
     background: rgba(255, 255, 255, 0.5);
+}
+
+.card-menu span {
+    background: #fff;
+    padding: 2px 2px;
+    border-radius: 2px;
+    border: 1px solid #000;
+    position: absolute;
+    top: 3px;
+    left: 3px;
 }
 
 .card .card-image {
@@ -364,55 +396,48 @@ button {
     margin-top: 30px;
 }
 
-/* @media (max-width: 1200px) {
-    .login {
-        flex-basis: calc(100% / 2);
-    }
-    .overlay-message {
-        width: 40%;
-    }
+.credits {
+    padding: 0 0 15px;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-@media (max-width: 750px) {
-    .players {
-        display: none;
-    }
-    .board {
-        flex-basis: 100%;
-    }
-    .container {
-        height: auto;
-    }
-    .login {
-        flex-basis: 100%;
-    }
-    .overlay-message {
-        width: 75%;
-    }
-}
- */
+/* Mobile styles */
 
 .container.mobile {
     overflow: hidden;
+    height: auto;
+    min-height: 100vh;
+}
+
+.fixed-menu {
+    position: fixed;
+    z-index: 99999;
+    top: 15px;
+    right: 15px;
+    opacity: 0.25;
+}
+
+.menu-icon {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 5px;
 }
 
 .mobile .players {
-    transition: all 500ms ease-in-out;
+    transition: all 250ms ease-in-out;
     flex: 1 0 0%;
     max-width: 0;
     opacity: 0;
     border: none;
 }
 
-.mobile .players.open {
-    flex-basis: 90%;
-    max-width: 100%;
-    transition: all 500ms ease-in-out;
-}
-
 .mobile .board {
     transition: flex-basis 500ms ease-in-out;
     flex-basis: 1 0 100%;
+}
+
+.mobile .card {
+    flex-basis: 15%;
 }
 
 .mobile .hand {
@@ -439,6 +464,48 @@ button {
     flex-basis: 25%;
 }
 
+.mobile .row .row-strength {
+    font-size: 16px;
+    background: #fff;
+    border: 1px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    z-index: 2;
+    height: 100%;
+    width: 25px;
+    border-radius: 0;
+}
+
+.mobile .row-strength.turn {
+    background: rgba(0, 128, 0);
+    color: #fff;
+}
+
+.mobile .row-strength.passed {
+    background: rgba(255, 165, 0);
+    color: #fff;
+}
+
+.mobile .players.open {
+    flex-basis: 100%;
+    max-width: 100%;
+    opacity: 1;
+}
+
+.mobile .total-strength span {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    font-size: 22px;
+}
+
+.mobile .player-info .avatar img {
+    max-width: 20%;
+}
+
 .cards-slider {
     display: flex;
     flex: 1 1 100%;
@@ -455,4 +522,28 @@ button {
 
 .button.disabled {
     opacity: 0.2;
+}
+
+.error {
+    color: red;
+}
+
+/* Media queries */
+
+@media (max-width: 1200px) {
+    .login {
+        flex-basis: calc(100% / 2);
+    }
+    .overlay-message {
+        width: 40%;
+    }
+}
+
+@media (max-width: 768px) {
+    .login {
+        flex-basis: 100%;
+    }
+    .overlay-message {
+        width: 75%;
+    }
 }

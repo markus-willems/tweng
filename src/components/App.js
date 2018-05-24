@@ -13,6 +13,24 @@ import '../assets/css/styles.css';
 
 const MOBILE_VIEWPORT_WIDTH_THRESHOLD = 768;
 
+const devState = {
+    playerIsReady: true,
+    gameIsOpen: true,
+    playerHasJoined: true,
+    players: [
+        {
+            userId: 1,
+            username: 'Player 1',
+        },
+        {
+            userId: 2,
+            username: 'Player 2',
+        },
+    ],
+    playerId: 1,
+    playersTurn: true,
+};
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -34,6 +52,10 @@ class App extends React.Component {
             spells: [],
             gameStatus: [],
             winner: false,
+            menuIsOpen: false,
+            showCredits: false,
+            errors: [],
+            loading: false,
         };
 
         this.pusher = new Pusher(process.env.PUSHER_APP_KEY, {
@@ -47,19 +69,36 @@ class App extends React.Component {
         this.handleCardOnClick = this.handleCardOnClick.bind(this);
         this.handleOnClickPassRound = this.handleOnClickPassRound.bind(this);
         this.resetGame = this.resetGame.bind(this);
+        this.handleOnClickMenuIcon = this.handleOnClickMenuIcon.bind(this);
     }
 
     componentDidMount() {
         const urlHash = window.location.hash;
+        // Join match
         if (urlHash.match(/#join\//) !== null) {
             this.setState({
                 isInvite: true,
                 channel: this.getChannelFromUrlHash(urlHash),
             });
         }
+        // Dev mode
+        if (urlHash.match(/#dev/) !== null) {
+            this.setState(prevState => {
+                return Object.assign({}, prevState, devState);
+            });
+        }
     }
 
     componentDidUpdate() {
+        // Dev mode
+        const urlHash = window.location.hash;
+        if (urlHash.match(/#dev/) !== null) {
+            if (this.state.playersTurn !== true) {
+                this.setState({
+                    playersTurn: true,
+                });
+            }
+        }
         if (!this.pusherChannel && this.state.channel) {
             this.pusherChannel = this.pusher.subscribe(this.state.channel);
             this.pusherChannel.bind('tweng', data => {
@@ -191,7 +230,18 @@ class App extends React.Component {
     }
 
     resetGame() {
-        console.log('reset game');
+        this.setState(prevState => {
+            return Object.assign({}, prevState, {
+                cardsOpponent: [],
+                cards: [],
+                passRound: false,
+                opponentPassRound: false,
+                spells: [],
+                gameStatus: [],
+                winner: false,
+                menuIsOpen: false,
+            });
+        });
     }
 
     setSpells(prevSpells, spell) {
@@ -262,6 +312,9 @@ class App extends React.Component {
     }
 
     async joinChannel(username, channel) {
+        this.setState({
+            loading: true,
+        });
         const response = await fetch(
             `${process.env.API_URL}/api/channel/join`,
             {
@@ -287,10 +340,19 @@ class App extends React.Component {
 
         // something went wrong
         if (!responseData.valid) {
+            this.setState(prevState => ({
+                errors: [].concat(responseData.message),
+            }));
         }
+        this.setState({
+            loading: false,
+        });
     }
 
     async createChannel(username) {
+        this.setState({
+            loading: true,
+        });
         const response = await fetch(
             `${process.env.API_URL}/api/channel/create`,
             {
@@ -313,6 +375,9 @@ class App extends React.Component {
                 playerHasJoined: true,
             }));
         }
+        this.setState({
+            loading: false,
+        });
     }
 
     async triggerMessage(data, type) {
@@ -413,6 +478,21 @@ class App extends React.Component {
             .reduce((acc, curr) => (acc += curr.strength), 0);
     }
 
+    handleOnClickMenuIcon(type) {
+        let updater = undefined;
+        if (type === 'menu') {
+            updater = prevState => ({
+                menuIsOpen: !prevState.menuIsOpen,
+            });
+        }
+        if (type === 'credits') {
+            updater = prevState => ({
+                showCredits: !prevState.showCredits,
+            });
+        }
+        this.setState(updater);
+    }
+
     renderMobile() {
         return (
             <div
@@ -421,6 +501,30 @@ class App extends React.Component {
                     (this.state.gameIsOpen ? '' : ' is-login')
                 }
             >
+                {this.state.gameIsOpen ? (
+                    <div className="fixed-menu">
+                        <div
+                            onClick={() => this.handleOnClickMenuIcon('menu')}
+                            className="menu-icon"
+                        >
+                            <img
+                                src={require(`../assets/images/menu.svg`)}
+                                alt="Menu"
+                            />
+                        </div>
+                        <div
+                            onClick={() =>
+                                this.handleOnClickMenuIcon('credits')
+                            }
+                            className="menu-icon"
+                        >
+                            <img
+                                src={require(`../assets/images/credits.svg`)}
+                                alt="Credits"
+                            />
+                        </div>
+                    </div>
+                ) : null}
                 {this.state.winner ? (
                     <Overlay
                         winner={this.state.winner}
@@ -428,7 +532,17 @@ class App extends React.Component {
                         reset={this.resetGame}
                     />
                 ) : null}
+                {this.state.showCredits ? (
+                    <Overlay
+                        showCredits={this.state.showCredits}
+                        handleCloseOverlay={this.handleOnClickMenuIcon}
+                    />
+                ) : null}
+                {this.state.loading ? (
+                    <Overlay loading={this.state.loading} />
+                ) : null}
                 <Login
+                    errors={this.state.errors}
                     username={this.state.username}
                     isInvite={this.state.isInvite}
                     playerHasJoined={this.state.playerHasJoined}
@@ -441,6 +555,7 @@ class App extends React.Component {
                     this.state.gameIsOpen ? (
                         <React.Fragment>
                             <Players
+                                menuIsOpen={this.state.menuIsOpen}
                                 isMobile={true}
                                 gameStatus={this.state.gameStatus}
                                 players={this.state.players}
@@ -473,6 +588,7 @@ class App extends React.Component {
                                 }
                                 spells={this.state.spells}
                                 playersTurn={this.state.playersTurn}
+                                opponentPassRound={this.state.opponentPassRound}
                             />
                         </React.Fragment>
                     ) : (
@@ -490,6 +606,19 @@ class App extends React.Component {
                     'container' + (this.state.gameIsOpen ? '' : ' is-login')
                 }
             >
+                {this.state.gameIsOpen ? (
+                    <div className="fixed-menu">
+                        <div
+                            onClick={() => this.handleOnClickMenuIcon('credits')}
+                            className="menu-icon"
+                        >
+                            <img
+                                src={require(`../assets/images/credits.svg`)}
+                                alt="Credits"
+                            />
+                        </div>
+                    </div>
+                ) : null}
                 {this.state.winner ? (
                     <Overlay
                         winner={this.state.winner}
@@ -497,7 +626,17 @@ class App extends React.Component {
                         reset={this.resetGame}
                     />
                 ) : null}
+                {this.state.showCredits ? (
+                    <Overlay
+                        showCredits={this.state.showCredits}
+                        handleCloseOverlay={this.handleOnClickMenuIcon}
+                    />
+                ) : null}
+                {this.state.loading ? (
+                    <Overlay loading={this.state.loading} />
+                ) : null}
                 <Login
+                    errors={this.state.errors}
                     username={this.state.username}
                     isInvite={this.state.isInvite}
                     playerHasJoined={this.state.playerHasJoined}
