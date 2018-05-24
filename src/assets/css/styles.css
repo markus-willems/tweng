@@ -70,7 +70,7 @@ img {
 }
 
 .actions {
-    flex: 1 1 7%;
+    flex: 1 1 10%;
     display: flex;
     justify-content: center;
 }
@@ -81,6 +81,7 @@ img {
     display: flex;
     justify-content: center;
     align-content: center;
+    height: 40px;
 }
 
 .actions-disable {
@@ -89,7 +90,7 @@ img {
 }
 
 .player {
-    flex: 1 1 46.5%;
+    flex: 1 1 45%;
 }
 
 .player-info {
